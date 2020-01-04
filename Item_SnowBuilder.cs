@@ -8,15 +8,19 @@ if ( $TypeMasks::FxPlaneObjectType $= "" )
 
 datablock ItemData (SnowBuilderItem : HammerItem)
 {
-	image     = "SnowBuilderImage";
-	iconName  = "";
+	image     = SnowBuilderImage;
+	iconName  = expandFileName ("./icon");
 	shapeFile = "base/data/shapes/empty.dts";
-	uiName    = "Snow Builder";
+
+	doColorShift    = true;
+	colorShiftColor = "0.3 0.3 0.3 1.0";
+
+	uiName = "Snow Builder";
 };
 
 datablock ShapeBaseImageData (SnowBuilderImage)
 {
-	item      = "SnowBuilderItem";
+	item      = SnowBuilderItem;
 	shapeFile = "base/data/shapes/empty.dts";
 
 	armReady = false;
