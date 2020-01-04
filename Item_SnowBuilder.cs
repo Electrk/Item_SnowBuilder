@@ -51,6 +51,11 @@ function SnowBuilderImage::onFire ( %this, %obj, %slot )
 		return;
 	}
 
+	if ( %obj.getDamagePercent () < 1.0 )
+	{
+		%obj.playThread (2, activate);
+	}
+
 	%start = %obj.getEyePoint ();
 	%eye   = %obj.getEyeVector ();
 	%scale = getWord (%obj.getScale (), 2);
