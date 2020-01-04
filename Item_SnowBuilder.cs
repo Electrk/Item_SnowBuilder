@@ -93,7 +93,18 @@ function SnowBuilderImage::onFire ( %this, %obj, %slot )
 
 			while ( isObject (%player = containerSearchNext ()) )
 			{
-				if ( vectorDist (%position, %player.getPlayerCenter ()) < 1.75 )
+				%center  = %player.getPlayerCenter ();
+				%centerZ = getWord (%center, 2);
+				%posZ    = getWord (%position, 2);
+
+				%checkPos = %position;
+
+				if ( %posZ > %centerZ )
+				{
+					%checkPos = getWords (%position, 0, 1) SPC %centerZ;
+				}
+
+				if ( vectorDist (%checkPos, %center) < 1.75 )
 				{
 					return;
 				}
