@@ -6,6 +6,5 @@ if ( LoadRequiredAddOn ("Support_BuildableSnow") == $Error::None )
 }
 else
 {
-	error ("Item_SnowBuilder - Missing required add-on: Support_BuildableSnow");
-	messageAll ('', "ERROR: Item_SnowBuilder - Missing required add-on: Support_BuildableSnow");
+	error ("ERROR: Missing required add-on `Support_BuildableSnow`!");
 }
