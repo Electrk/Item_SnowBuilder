@@ -1,11 +1,9 @@
+$SnowBuilder::Version          = 1;
 $SnowBuilder::DistanceCheck    = 1.75;
 $SnowBuilder::DistanceCheckMin = $SnowBuilder::DistanceCheck;
 $SnowBuilder::DistanceCheckMax = 999999;
 $SnowBuilder::CenterHigherZ    = true;
 $SnowBuilder::RaycastRange     = 6;
-
-// ------------------------------------------------
-
 
 // Ugly hack because there's no type for fxPlanes that I'm aware of.
 if ( $TypeMasks::FxPlaneObjectType $= "" )
@@ -14,6 +12,9 @@ if ( $TypeMasks::FxPlaneObjectType $= "" )
 	$TypeMasks::FxPlaneObjectType = %temp.getType ();
 	%temp.delete ();
 }
+
+// ------------------------------------------------
+
 
 datablock ItemData (SnowBuilderItem : HammerItem)
 {
