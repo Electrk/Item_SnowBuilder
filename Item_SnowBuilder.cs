@@ -1,3 +1,12 @@
+$SnowBuilder::DistanceCheck    = 1.75;
+$SnowBuilder::DistanceCheckMin = $SnowBuilder::DistanceCheck;
+$SnowBuilder::DistanceCheckMax = 999999;
+$SnowBuilder::CenterHigherZ    = true;
+$SnowBuilder::RaycastRange     = 6;
+
+// ------------------------------------------------
+
+
 // Ugly hack because there's no type for fxPlanes that I'm aware of.
 if ( $TypeMasks::FxPlaneObjectType $= "" )
 {
@@ -63,13 +72,12 @@ function SnowBuilderImage::onFire ( %this, %obj, %slot )
 	%start = %obj.getEyePoint ();
 	%eye   = %obj.getEyeVector ();
 	%scale = getWord (%obj.getScale (), 2);
-	%end   = vectorAdd (%start, VectorScale (%eye, 10 * %scale));
+	%end   = vectorAdd (%start, VectorScale (%eye, $SnowBuilder::RaycastRange * %scale));
 
 	// We don't look for non-raycasted bricks so it doesn't try to add/remove snow in mid-air.
 	//
 	// The downside to this is that we need to do an additional check with the fxPlane when we've
-	// hit the ground and can't find anymore snow bricks.
-	//
+	// hit the ground and can't find any more snow bricks.
 	%mask = $TypeMasks::FxBrickObjectType | $TypeMasks::FxPlaneObjectType;
 
 	%search = containerRayCast (%start, %end, %mask);
@@ -81,8 +89,7 @@ function SnowBuilderImage::onFire ( %this, %obj, %slot )
 
 		// Since we're not searching for non-raycasted bricks, we need to do an additional search
 		// from the fxPlane, so we can still place snow when we've reached the ground.
-		//
-		if ( %target.getClassName () $= "fxPlane" )
+		if ( %target.getClassName () $= "fxPlane"  &&  %target.getName () $= "groundPlane" )
 		{
 			initContainerBoxSearch (%position, 0.01, $TypeMasks::FxBrickAlwaysObjectType);
 
@@ -102,18 +109,28 @@ function SnowBuilderImage::onFire ( %this, %obj, %slot )
 
 			while ( isObject (%player = containerSearchNext ()) )
 			{
-				%center  = %player.getPlayerCenter ();
-				%centerZ = getWord (%center, 2);
-				%posZ    = getWord (%position, 2);
+				%playerScale = %player.getScale ();
+				%center      = %player.getPlayerCenter ();
+				%centerZ     = getWord (%center, 2);
+				%positionZ   = getWord (%position, 2);
 
 				%checkPos = %position;
 
-				if ( %posZ > %centerZ )
+				if ( $SnowBuilder::CenterHigherZ  &&  %positionZ > %centerZ )
 				{
 					%checkPos = getWords (%position, 0, 1) SPC %centerZ;
 				}
 
-				if ( vectorDist (%checkPos, %center) < 1.75 )
+				%scaleX = getWord (%playerScale, 0);
+				%scaleY = getWord (%playerScale, 1);
+				%scaleZ = getWord (%playerScale, 2);
+
+				%distScale = (%scaleX + %scaleY + %scaleZ) / 3;
+				%distCheck = mClampF (%distScale * $SnowBuilder::DistanceCheck,
+					$SnowBuilder::DistanceCheckMin,
+					$SnowBuilder::DistanceCheckMax);
+
+				if ( vectorDist (%checkPos, %center) < %distCheck )
 				{
 					return;
 				}
