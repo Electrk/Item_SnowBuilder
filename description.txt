@@ -1,4 +1,4 @@
 Title: Snow Builder
 Author: Electrk
 
-Item for building snow in Support_BuildableSnow
+An item for sculpting buildable snow.  Requires Support_BuildableSnow
